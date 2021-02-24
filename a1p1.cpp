@@ -9,6 +9,15 @@ struct params{
     vector<Point2f> p;
 };
 
+inline bool file_notexist (const std::string& name) {
+    if (FILE *file = fopen(name.c_str(), "r")) {
+        fclose(file);
+        return false;
+    } else {
+        return true;
+    }   
+}
+
 void mouseHandle(int event, int x, int y,int flags, void* data_ptr){
     if(event==EVENT_LBUTTONDOWN){
         params *data = ((params *) data_ptr);
@@ -26,10 +35,24 @@ void mouseHandle(int event, int x, int y,int flags, void* data_ptr){
 
 int main(int argc, char const *argv[]){
 
-    Mat im_src = imread("traffic.jpg", IMREAD_GRAYSCALE);
+    if (argc!=2){
+        cout << "Please run the program using this command format \"./output filename.jpg\"\n";
+        return 1;
+    }
+    string file = argv[1];
+
+    if (file_notexist(file)){
+        cout << "Please enter a file that exists\n";
+        cout << "Please run the program using this command format \"./output filename.jpg\"\n";
+        return 1;
+    }
+
+    Mat im_src;
     Mat im_pro;
     Mat im_dst;
 
+  
+    im_src = imread(file, IMREAD_GRAYSCALE);
     Size pro_size(1280,875);
     Size dst_size(400,1000);
 
@@ -52,7 +75,8 @@ int main(int argc, char const *argv[]){
     params data;
     data.im = im_tmp;
 
-    imshow("Original-Image", im_tmp);
+    try{imshow("Original-Image", im_tmp);}
+    catch(...){cout << "Please provide a valid image file\n"; return 1;}
     setMouseCallback("Original-Image", mouseHandle, &data);
     waitKey(0);
 
