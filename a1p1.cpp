@@ -1,5 +1,5 @@
 #include <opencv2/opencv.hpp>
-#include <bits/stdc++.h>
+#include <iostream>
 
 using namespace std;
 using namespace cv;
@@ -26,7 +26,7 @@ void mouseHandle(int event, int x, int y,int flags, void* data_ptr){
 
 int main(int argc, char const *argv[]){
 
-    Mat im_src = imread("empty.jpg", IMREAD_GRAYSCALE);
+    Mat im_src = imread("traffic.jpg", IMREAD_GRAYSCALE);
     Mat im_pro;
     Mat im_dst;
 
@@ -46,7 +46,7 @@ int main(int argc, char const *argv[]){
     pts_dst.push_back(Point2f(0,0));
     pts_dst.push_back(Point2f(dst_size.width-1, 0));
     pts_dst.push_back(Point2f(dst_size.width-1, dst_size.height-1));
-    pts_dst.push_back(Point2f(0, dst_size.height-1 ));
+    pts_dst.push_back(Point2f(0, dst_size.height-1));
 
     Mat im_tmp = im_src.clone();
     params data;
