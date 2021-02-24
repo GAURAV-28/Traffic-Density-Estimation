@@ -36,14 +36,14 @@ void mouseHandle(int event, int x, int y,int flags, void* data_ptr){    // funct
 int main(int argc, char const *argv[]){         //filename parameter is passed through while running the program
 
     if (argc!=2){       // unexpected no. of parameters
-        cout << "Please run the program using this command format \"./output filename.jpg\"\n";
+        cout << "Please run the program using this command format \"./output filename\"\n";
         return 1;
     }
-    string file = argv[1];  //file = the image's name
-
+    string f = argv[1];  //file = the image's name
+    string file = f+".jpg";
     if (file_notexist(file)){   // checks if file doesn't exist, prints error message if true
         cout << "Please enter a file that exists\n";
-        cout << "Please run the program using this command format \"./output filename.jpg\"\n";
+        cout << "Please run the program using this command format \"./output filename\"\n";
         return 1;
     }
 
@@ -85,13 +85,13 @@ int main(int argc, char const *argv[]){         //filename parameter is passed t
     warpPerspective(im_src, im_dst, h2, dst_size);                  
 
     imshow("Projected-Image", im_pro);                              // displays im_pro
-    imwrite("projected.jpg", im_pro);                               // writes im_pro to a file
+    imwrite(f+"_projected.jpg", im_pro);                               // writes im_pro to a file
     waitKey(0);                                                     // waits until key is pressed
 
     destroyWindow("Projected-Image");                               // window is closed
 
     imshow("Cropped-Image", im_dst);                                // displays cropped image im_dst
-    imwrite("cropped.jpg", im_dst);                                 // writes the same image to a file
+    imwrite(f+"_cropped.jpg", im_dst);                                 // writes the same image to a file
     waitKey(0);                                                     // displays the file until key is pressed
 
     return 0;
