@@ -3,4 +3,7 @@ CFLAGS= -c -Wall
 LIB= `pkg-config --cflags --libs opencv`
 
 all:
-	$(CC) s.cpp -o s -pthread -std=c++11 $(LIB)
+	$(CC) a1p1.cpp -o output -pthread -std=c++11 $(LIB)
+
+clean:
+	rm output
