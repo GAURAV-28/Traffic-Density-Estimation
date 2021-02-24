@@ -14,7 +14,7 @@ The tar file contains one C++ code file and one make file along with two images-
     ```
     ./output image
     ``` 
-    where image = ```empty``` or ```traffic``` or any other suitable image. 
+    where image = ```empty.jpg``` or ```traffic.jpg``` or any other suitable image. 
 4. Select four images on the displayed grayscale image in ```clockwise direction``` i.e. select
     ``` 
     TOP-LEFT -> TOP-RIGHT -> BOTTOM-RIGHT -> BOTTOM-LEFT

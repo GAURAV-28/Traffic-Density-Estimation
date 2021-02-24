@@ -21,10 +21,10 @@ inline bool file_notexist (const std::string& name) {  // a function used to che
 void mouseHandle(int event, int x, int y,int flags, void* data_ptr){    // function used to handle mouse input
     if(event==EVENT_LBUTTONDOWN){                                       // only accepts left click of mouse as a trigger to perform the operation
         params *data = ((params *) data_ptr);                           // data_ptr is a pointer of a params structure which is holding the data of the image that is being operated on
-        circle(data->im, Point(x,y),2,Scalar(0,0,0), 5, cv::LINE_AA);   // x,y is the coordinate where the mouse was clicked(passed by the setmousecallback function). A circle is drawn at this positon using circle(...)
-        imshow("Original-Image", data->im);                             // the image being displayed is updated with the new drawn circle.
+        circle(data->im, Point(x,y),2,Scalar(0,0,0), 5, cv::LINE_AA);   // x,y is the coordinate where the mouse was clicked(passed by the setmousecallback function). A small dot is drawn at this positon using circle(...)
+        imshow("Original-Image", data->im);                             // the image being displayed is updated with the new drawn dot.
 
-        if(data->p.size()<3) data->p.push_back(Point2f(x,y));           // if no. of circles drawn before < 3, add the new coordinate to data.p(vector),
+        if(data->p.size()<3) data->p.push_back(Point2f(x,y));           // if no. of input by the user earlier < 3, add the new coordinate to data.p(vector),
         else{                                                           // else, push the coordinate into p and close the window(stopping mouse input)
             data->p.push_back(Point2f(x,y));
             destroyWindow("Original-Image");
@@ -69,7 +69,7 @@ int main(int argc, char const *argv[]){         //filename parameter is passed t
     pts_dst.push_back(Point2f(dst_size.width-1, dst_size.height-1));
     pts_dst.push_back(Point2f(0, dst_size.height-1));
 
-    Mat im_tmp = im_src.clone();        //copy of orginal image to draw circle while taking input
+    Mat im_tmp = im_src.clone();        //copy of orginal image to draw dot while taking input
     params data;
     data.im = im_tmp;
 
