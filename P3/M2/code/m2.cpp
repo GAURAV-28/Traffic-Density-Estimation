@@ -5,7 +5,8 @@
 using namespace std;
 using namespace cv;
 
-
+int X = 400;
+int Y = 1000;
 // This function is used to calculate number of white pixels in the frame matrix.
 int countPixel(Mat image) { 
 
@@ -34,13 +35,13 @@ int countPixel(Mat image) {
 // This is the function extracted from subtask 1 of the assignment.
 // It takes input a matrix and outputs a matrix which is cropped and projected correctly.
 
-Mat project_crop(Mat frame){
+Mat project_crop(Mat frame, double factor){
   Mat im_src=frame;
   Mat im_pro;
   Mat im_dst;
  
   Size pro_size(1280,875);                    
-  Size dst_size(400,1000);                    
+  Size dst_size(X*factor,Y*factor);                    
 
   vector<Point2f> pts_pro;
   vector<Point2f> pts_dst;
@@ -74,13 +75,13 @@ Mat project_crop(Mat frame){
 }
 
 // This is a caller function for counting number of white pixels and dividing by total pixels of cropped matrix (400x1000)
-double process(Mat frame){
+double process(Mat frame, double factor){
 
   Mat ff;
   Mat dst = frame;
   threshold(dst,ff, 100, 255, THRESH_BINARY);
   
-  double d = (double) countPixel(ff)/(400000);
+  double d = ((double) countPixel(ff))/(X*Y*factor*factor);
   return d;
 
 }
@@ -101,23 +102,22 @@ int main(int argc, char const *argv[]){
   time_t start = time(NULL);
 
   if (argc!=3){       // unexpected no. of parameters
-    cout << "Please run the program using this command format \"./output videofilename paramater x\"\n";
+    cout << "Please run the program using this command format \"./output videofilename parameter for resolution\"\n";
     return 1;
   }
   string f = argv[1];  //file = the video's name
   string video = f+".mp4";
-  int x = stoi(argv[2]);
 
   if (file_notexist(video)){   // checks if file doesn't exist, prints error message if true
     cout << "Please enter a videofile that exists\n";
-    cout << "Please run the program using this command format \"./output videofilename parameter x\"\n";
+    cout << "Please run the program using this command format \"./output videofilename parameter for resolution\"\n";
     return 1;
   }
 
   VideoCapture cap(video);                     //capture the traffic video
   Ptr<BackgroundSubtractor> pBackSub1, pBackSub2;           //two background substractor pointer for queue and dynamic density
   pBackSub1 = createBackgroundSubtractorMOG2(500,32,false); //background substractor for queue density with suitable params
-  pBackSub2 = createBackgroundSubtractorMOG2(500,16,true);  //background substractor for dynamic density with suitable params
+  //pBackSub2 = createBackgroundSubtractorMOG2(500,16,true);  //background substractor for dynamic density with suitable params
 
   Mat frame,fgMask1,fgMask2,crop,gray,r,s;
 
@@ -128,12 +128,14 @@ int main(int argc, char const *argv[]){
     return 1;
   }
 
+  double factor = stod(argv[2]);
+
   frame = imread("bg.jpg");             // empty background is taken as frame matrix, bg.jpg is extracted from the traffic video
   cvtColor(frame,gray,COLOR_BGR2GRAY);  // converting to gray scale
-  crop = project_crop(gray);            // apply projection and cropping this gray frame matrix (using subtask1 code)
+  crop = project_crop(gray,factor);            // apply projection and cropping this gray frame matrix (using subtask1 code)
   pBackSub1->apply(crop, fgMask1, 0);   // apply background substraction on initial frame to get fgMask1 keeping third param as 0 to fix this frame as background
-  pBackSub2->apply(frame , r, -1);      // apply background substraction on initial frame to get fgMask2 keeping third param as -1 to dynamically update the frame as background
-  fgMask2 = project_crop(r);            // apply projection and cropping dynamic density mask matrix (using subtask1 code)
+  //pBackSub2->apply(frame , r, -1);      // apply background substraction on initial frame to get fgMask2 keeping third param as -1 to dynamically update the frame as background
+  //fgMask2 = project_crop(r);            // apply projection and cropping dynamic density mask matrix (using subtask1 code)
   
 
   // if the video is not opened then suitable help is printed on the console
@@ -144,39 +146,36 @@ int main(int argc, char const *argv[]){
   }
 
   int count = 0; //initialize count for frames
-
+  
 
   ofstream file;                        // for convience and making graphs easily, the output is saved in a csv file (output_x.txt)
-  string outname = "M1output/output_"+ to_string(x) + ".txt";
+  string outname = "M2output/output_with_factor_"+ to_string(factor) + ".txt";
   file.open(outname);
 
   while(1){
 
-    cap >> frame;                         // frame is taken from the video, count is increased
+    cap >> frame; 
     if (frame.empty()) break; 
-    count++;                
+    count++;             
+    
     cvtColor(frame,gray,COLOR_BGR2GRAY);  // converted to gray scale
-    crop = project_crop(gray);            // apply projection and cropping this gray frame matrix (using subtask1 code)
+    crop = project_crop(gray,factor);            // apply projection and cropping this gray frame matrix (using subtask1 code)
 
     pBackSub1->apply(crop, fgMask1, 0);   // apply background substraction on this frame to get fgMask1 keeping third param as 0 to fix the background
-    pBackSub2->apply(frame, r, -1);       // apply background substraction on this frame to get fgMask2 keeping third param as -1 to dynamically update the background
-    fgMask2 = project_crop(r);            // // apply projection and cropping dynamic density mask matrix (using subtask1 code)
-    double res = process(fgMask1);
+    double res = process(fgMask1,factor);
     file<< (count) <<" "<< res <<endl; // computed queue and dynamic density saved in csv file
     //cout<< (count) <<" "<< res <<endl; // computed queue and dynamic density printed along with frame number
     
+    cap >> frame;             // this frame is skipped for computation
+    if (frame.empty()) break;
+    count++;
+    cap >> frame;             // this frame is skipped for computation 
+    if (frame.empty()) break;
+    count++;
 
-    for(int i=0; i<x-1;i++){
-        cap >> frame;             // this frame is skipped for computation
-        if (frame.empty()) break;
-        count++;
-        file<< (count) <<" "<< res <<endl; // computed queue and dynamic density saved in csv file
-        //cout<< (count) <<" "<< res <<endl; // computed queue and dynamic density printed along with frame number
-    }
-
-    char c=(char)waitKey(10); // to update the video frames
+    /*char c=(char)waitKey(20); // to update the video frames
     if(c==27)
-      break;
+      break;*/
   }
 
   // all windows and files are closed.
