@@ -1,7 +1,8 @@
 #include "opencv2/opencv.hpp"
 #include <iostream>
 #include <chrono>
-#include <bits/stdc++.h>
+#include <fstream>
+// #include <bits/stdc++.h>
 
 using namespace std;
 using namespace cv;
@@ -119,10 +120,15 @@ void *execute(void *t){
     //cout<<tdata->process(fgMask1)<<endl;
     int num = cap.get(CAP_PROP_FRAME_COUNT)/NUM_THREADS + 1;
     //cout<<cap.get(CAP_PROP_FRAME_COUNT)<<endl;
+    
+
     int count = id*num;
     int end = (id+1)*num;
+    double frameRate = cap.get(CV_CAP_PROP_FPS);
+    double frameTime = (1000.0 * count) / frameRate;
+    cap.set(CV_CAP_PROP_POS_MSEC, frameTime);
     //cout<<count<<endl;
-    cap.set(1, count);
+    // cap.set(1, count);
     while(count < end){
 
       cap >> frame;                 // frame is taken from the video, count is increased
