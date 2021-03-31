@@ -20,10 +20,12 @@ for lines in file2:
  file2_line.append(lines) 
  
 if len(file1) > len(file2): 
- print("Length Of File of ",filename1,"is greater than",filename2,len(file1),">",len(file2)) 
+ print("Length Of File of ",filename1,"is greater than",filename2,len(file1),">",len(file2))
+ 
  
 elif len(file1) < len(file2): 
- print("Length Of File of ",filename1,"is less than",filename2,len(file1),"<",len(file2)) 
+ print("Length Of File of ",filename1,"is less than",filename2,len(file1),"<",len(file2))
+
  
 else: 
  n = 0 
@@ -38,4 +40,4 @@ else:
    n += 1 
  avg = sum/n
  err = math.sqrt(error/n)
- print((avg - err)/avg)
+ print((avg-err)/avg)

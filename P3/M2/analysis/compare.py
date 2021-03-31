@@ -1,4 +1,5 @@
 import sys
+import math
 
 filename1 = sys.argv[1]
 filename2 = sys.argv[2]
@@ -27,10 +28,14 @@ elif len(file1) < len(file2):
 else: 
  n = 0 
  error = 0.0
+ sum = 0.0
  for line in file1_line: 
    l = line.split(" ")
    m = file2_line[n].split(" ")
-   error += abs(float(l[1])-float(m[1]))
-
+   k = (float(l[1])-float(m[1]))
+   error += k*k
+   sum += float(m[1])
    n += 1 
- print(error/n)
+ avg = sum/n
+ err = math.sqrt(error/n)
+ print((avg - err)/avg)

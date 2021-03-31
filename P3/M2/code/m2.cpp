@@ -1,9 +1,11 @@
 #include "opencv2/opencv.hpp"
 #include <iostream>
+#include <chrono>
 #include <bits/stdc++.h>
 
 using namespace std;
 using namespace cv;
+using namespace std::chrono;
 
 int X = 400;
 int Y = 1000;
@@ -99,7 +101,7 @@ inline bool file_notexist (const std::string& name) {  // a function used to che
 
 int main(int argc, char const *argv[]){
 
-  time_t start = time(NULL);
+  high_resolution_clock::time_point t1 = high_resolution_clock::now();
 
   if (argc!=3){       // unexpected no. of parameters
     cout << "Please run the program using this command format \"./output videofilename parameter for resolution\"\n";
@@ -119,7 +121,7 @@ int main(int argc, char const *argv[]){
   pBackSub1 = createBackgroundSubtractorMOG2(500,32,false); //background substractor for queue density with suitable params
   //pBackSub2 = createBackgroundSubtractorMOG2(500,16,true);  //background substractor for dynamic density with suitable params
 
-  Mat frame,fgMask1,fgMask2,crop,gray,r,s;
+  Mat frame,fgMask1,crop,gray;
 
   
 
@@ -149,7 +151,7 @@ int main(int argc, char const *argv[]){
   
 
   ofstream file;                        // for convience and making graphs easily, the output is saved in a csv file (output_x.txt)
-  string outname = "M2output/output_with_factor_"+ to_string(factor) + ".txt";
+  string outname = "M2output/out_with_factor_"+ to_string(factor) + ".txt";
   file.open(outname);
 
   while(1){
@@ -166,16 +168,6 @@ int main(int argc, char const *argv[]){
     file<< (count) <<" "<< res <<endl; // computed queue and dynamic density saved in csv file
     //cout<< (count) <<" "<< res <<endl; // computed queue and dynamic density printed along with frame number
     
-    cap >> frame;             // this frame is skipped for computation
-    if (frame.empty()) break;
-    count++;
-    cap >> frame;             // this frame is skipped for computation 
-    if (frame.empty()) break;
-    count++;
-
-    /*char c=(char)waitKey(20); // to update the video frames
-    if(c==27)
-      break;*/
   }
 
   // all windows and files are closed.
@@ -183,8 +175,10 @@ int main(int argc, char const *argv[]){
   file.close();
   destroyAllWindows();
 
-  time_t end = time(NULL);
-  cout<< end-start << endl;
+  high_resolution_clock::time_point t2 = high_resolution_clock::now();
+  duration<double> time_span = duration_cast<duration<double>>(t2 - t1);
+
+  cout << time_span.count() << endl;
 	
   return 0;
 }
