@@ -119,7 +119,6 @@ int main(int argc, char const *argv[]){
   VideoCapture cap(video);                     //capture the traffic video
   Ptr<BackgroundSubtractor> pBackSub1, pBackSub2;           //two background substractor pointer for queue and dynamic density
   pBackSub1 = createBackgroundSubtractorMOG2(500,32,false); //background substractor for queue density with suitable params
-  //pBackSub2 = createBackgroundSubtractorMOG2(500,16,true);  //background substractor for dynamic density with suitable params
 
   Mat frame,fgMask1,crop,gray;
 
@@ -136,9 +135,6 @@ int main(int argc, char const *argv[]){
   cvtColor(frame,gray,COLOR_BGR2GRAY);  // converting to gray scale
   crop = project_crop(gray,factor);            // apply projection and cropping this gray frame matrix (using subtask1 code)
   pBackSub1->apply(crop, fgMask1, 0);   // apply background substraction on initial frame to get fgMask1 keeping third param as 0 to fix this frame as background
-  //pBackSub2->apply(frame , r, -1);      // apply background substraction on initial frame to get fgMask2 keeping third param as -1 to dynamically update the frame as background
-  //fgMask2 = project_crop(r);            // apply projection and cropping dynamic density mask matrix (using subtask1 code)
-  
 
   // if the video is not opened then suitable help is printed on the console
   if(!cap.isOpened()){
@@ -166,7 +162,6 @@ int main(int argc, char const *argv[]){
     pBackSub1->apply(crop, fgMask1, 0);   // apply background substraction on this frame to get fgMask1 keeping third param as 0 to fix the background
     double res = process(fgMask1,factor);
     file<< (count) <<" "<< res <<endl; // computed queue and dynamic density saved in csv file
-    //cout<< (count) <<" "<< res <<endl; // computed queue and dynamic density printed along with frame number
     
   }
 

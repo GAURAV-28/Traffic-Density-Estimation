@@ -3,8 +3,6 @@
 #include <fstream>
 #include <chrono>
 
-// #include <bits/stdc++.h>
-
 using namespace std;
 using namespace cv;
 using namespace std::chrono;
@@ -110,24 +108,8 @@ void *execute(void *t){
     Mat frame = tdata->frame;
 
     Mat fgMask1;
-    // cvtColor(frame,gray,COLOR_BGR2GRAY);  
-    // crop = tdata->project_crop(gray);           
-
     pBackSub1->apply(frame, fgMask1, 0); 
-    //cout<< "in" << id << endl;
-
-    // int c = 0;
-    // for( c=0 ; c<frame_seq.size() ; c ++ ){
-    //   if(c % NUM_THREADS == id){
-    //   cvtColor(frame_seq[c],gray,COLOR_BGR2GRAY);  
-    //   crop = tdata->project_crop(gray);           
-
-    //   pBackSub1->apply(crop, fgMask1, 0); 
-      tdata->out = tdata->process(fgMask1);
-      //cout << tdata->out << endl;
-    //   }
-    // }
-    //cout<<c<<endl;
+    tdata->out = tdata->process(fgMask1);
     pthread_exit(NULL);
 }
 
@@ -208,11 +190,9 @@ int main(int argc, char const *argv[]){
   pthread_attr_init(&attr);
   pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_JOINABLE);
   thread_data tdata[NUM_THREADS];
-//   thread_data tdata_const;
 
   Mat frame;
   Mat gray,crop,fgMask1;
-//   vector<Mat> frame_seq;
 
   if (file_notexist("bg.jpg")){   // checks if file doesn't exist, prints error message if true
     cout << "Please put the background file in the directory"<<endl;
@@ -225,7 +205,6 @@ int main(int argc, char const *argv[]){
   std::vector<cv::Mat> imageSections = split(frame, (void *) &tdata[0]);
     
   if(NUM_THREADS == 1){
-    //cout<<"in"<<endl;
     cvtColor(frame,gray,COLOR_BGR2GRAY);  
     crop = tdata[0].project_crop(gray); 
     tdata[0].frame = crop;  
@@ -256,19 +235,9 @@ int main(int argc, char const *argv[]){
   }
   }
 
-  /*for( i = 0; i < NUM_THREADS; i++ ) {  
-            
-      rc = pthread_create(&threads[i], &attr, execute, (void *) &tdata[i]);
-      if (rc) {
-        cout << "Error:unable to create thread," << rc << endl;
-        exit(-1);
-      }
-  }*/
-
   ofstream file;                        // for convience and making graphs easily, the output is saved in a csv file (output.csv)
   string outfile = "M3output/m3_num_"+to_string(NUM_THREADS)+".txt";
   file.open(outfile);
-  //file << "output" << endl;
 
   // if the video is not opened then suitable help is printed on the console
   if(!cap.isOpened()){
@@ -280,8 +249,6 @@ int main(int argc, char const *argv[]){
   int count = 0; //initialize count for frames
 
   Mat fr;
-  
-  //cout << "video_cap" << endl;
   vector<Mat> split1;
   map<int,double> final_out;
   while(1){
@@ -322,7 +289,6 @@ int main(int argc, char const *argv[]){
       exit(-1);
     }
     final_out[count] = final_out[count] + tdata[i].out;
-    //for(auto x : tdata[i].out) cout<<x.first<<" "<<x.second<<endl;
     }
   }
   }
@@ -334,7 +300,6 @@ int main(int argc, char const *argv[]){
 
   for(auto x : final_out) {
     file<<x.first<<" "<<x.second<<endl;
-    //cout<<x.first<<" "<<x.second<<endl;
   }
 
   file.close();
@@ -344,7 +309,6 @@ int main(int argc, char const *argv[]){
 
   cout << time_span.count() << endl;
   return 0;
-  //pthread_exit(NULL);
 
 }
 

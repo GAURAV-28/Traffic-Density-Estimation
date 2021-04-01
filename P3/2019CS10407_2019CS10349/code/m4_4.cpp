@@ -219,9 +219,7 @@ int main(int argc, char const *argv[]){
   int count = 0; //initialize count for frames
 
   Mat fr;
-  
-  //cout << "video_cap" << endl;
-//   vector<Mat> split1;
+
   map<int,double> final_out;
   bool done = false;
   int j = NUM_THREADS;
@@ -266,7 +264,6 @@ int main(int argc, char const *argv[]){
 
   for(auto x : final_out) {
     file<<x.first<<" "<<x.second<<endl;
-    //cout<<x.first<<" "<<x.second<<endl;
   }
 
   file.close();
@@ -276,7 +273,5 @@ int main(int argc, char const *argv[]){
 
   cout << time_span.count() << endl;
   return 0;
-  //pthread_exit(NULL);
-
 }
 
