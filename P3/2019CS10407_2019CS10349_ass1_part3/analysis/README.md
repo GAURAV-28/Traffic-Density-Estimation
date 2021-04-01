@@ -8,8 +8,10 @@ This analysis folder contains four folders with each folder representing the fou
 1. After generating the executables bu using the code for each method in the code folder, transfer the executables to its respective folder in the analysis folder.
 2. Run 
     ```
-    ./run.sh
+    ./run.sh videofilename baseline-runtime
     ```
+    where, videofilename is the name of the traffic video without ```.mp4``` and baseline-runtime is the runtime of the subtask 2 code without skipping frames (78 seconds for Gaurav's Machine).
+
     in each method's respective folder to generate the results, and the graph plot for the respective method.
 3.  The values of runtime, utility and no. of threads are the respective columns in the output file "err.txt".
 4.  Graphs generated are stored as plot.png and plot1.png depending upon the methods.
