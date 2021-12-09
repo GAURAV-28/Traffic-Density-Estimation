@@ -56,5 +56,5 @@ The code takes the source image as input and the user is asked to select four po
 ## Authors-
 
 * [T Abishek](https://github.com/abishek2188/) -   2019CS10407
-* [Gaurav Jain](https://github.com/GAURAV-28)   -   2019CS10349
+* [Gaurav Jain](https://github.com/GauravJain28)   -   2019CS10349
 
