@@ -6,7 +6,7 @@ OpenCV algorithms work best on rectangular frames. But when a camera is deployed
 This repository contains the code for camera angle correction and frame cropping. There are two sample images present to test the code - ```traffic.jpg``` and ```empty.jpg```.
 
 ## How to Run the Code:
-1. Put the code file and Makefile along with the sample images in the same folder.
+1. Put the code file and ```Makefile``` along with the sample images in the same folder.
 2. Run 
     ```
     make
