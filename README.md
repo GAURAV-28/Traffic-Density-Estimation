@@ -8,7 +8,7 @@ The repo contains one C++ code file and one make file along with one image extra
 We have also added our output as ```out.txt``` and the chart based on this data as ```Traffic_Density.png```.
 
 ### Estimated Traffic Density
-![td](Traffic-Density-Estimation/td.png)
+![td](P2-Traffic-Density-Estimation/td.png)
 
 ## How to Run the Code:
 ### Part 1-
